@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 // @ts-check
 import withDefaults from '../shared.webpack.config.mjs';
+import path from 'path';
 
 export default withDefaults({
 	context: path.join(import.meta.dirname),
