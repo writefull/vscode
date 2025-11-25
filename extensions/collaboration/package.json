@@ -1,0 +1,70 @@
+{
+	"name": "collaboration",
+	"displayName": "Collaboration",
+	"description": "Built-in collaborative editing support using Yjs.",
+	"version": "0.0.1",
+	"publisher": "vscode",
+	"license": "MIT",
+	"engines": {
+		"vscode": "^1.85.0"
+	},
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "./out/extensionMain",
+	"scripts": {
+		"compile": "gulp compile-extension:collaboration",
+		"watch": "gulp watch-extension:collaboration"
+	},
+	"capabilities": {
+		"virtualWorkspaces": false,
+		"untrustedWorkspaces": { "supported": false }
+	},
+	"dependencies": {
+		"ws": "^8.18.0",
+		"y-protocols": "^1.0.6",
+		"yjs": "^13.6.18"
+	},
+	"contributes": {
+		"configuration": {
+			"title": "Collaboration",
+			"properties": {
+				"collaboration.enabled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable collaborative editing."
+				},
+				"collaboration.serverUrl": {
+					"type": "string",
+					"default": "ws://localhost:4003",
+					"description": "WebSocket endpoint of the collaboration server."
+				},
+				"collaboration.userName": {
+					"type": "string",
+					"default": "",
+					"description": "Preferred display name for collaboration sessions."
+				},
+				"collaboration.autoConnect": {
+					"type": "boolean",
+					"default": false,
+					"description": "Automatically connect on startup."
+				}
+			}
+		},
+		"commands": [
+			{ "command": "collaboration.connect", "title": "Collaboration: Connect" },
+			{ "command": "collaboration.disconnect", "title": "Collaboration: Disconnect" }
+		],
+		"menus": {
+			"commandPalette": [
+				{ "command": "collaboration.connect" },
+				{ "command": "collaboration.disconnect" }
+			]
+		}
+	},
+	"devDependencies": {
+		"@types/node": "22.x",
+		"@types/vscode": "^1.85.0",
+		"@types/ws": "^8.18.0"
+	}
+}

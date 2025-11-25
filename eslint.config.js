@@ -1758,6 +1758,30 @@ export default tseslint.config(
 					]
 				},
 				{
+					'target': 'src/vs/workbench/services/collaboration/*.ts',
+					'restrictions': [
+						'vs/base/~',
+						'vs/base/parts/*/~',
+						'vs/platform/*/~',
+						'vs/editor/~',
+						'vs/editor/contrib/*/~',
+						'vs/workbench/~',
+						'vs/workbench/services/*/~',
+						'vs/workbench/services/collaboration/*.ts', // allow relative imports within collaboration service
+						'vs/workbench/common/collaboration.js', // allow import from common collaboration
+						{
+							'when': 'test',
+							'pattern': 'vs/workbench/contrib/*/~'
+						}, // TODO@layers
+						'tas-client', // node module allowed even in /common/
+						'vscode-textmate', // node module allowed even in /common/
+						'@vscode/vscode-languagedetection', // node module allowed even in /common/
+						'@vscode/tree-sitter-wasm', // type import
+						'vs/nls.js', // allow nls imports
+						'vs/amdX.js' // allow amdX imports
+					]
+				},
+				{
 					'target': 'src/vs/workbench/contrib/*/~',
 					'restrictions': [
 						'vs/base/~',
