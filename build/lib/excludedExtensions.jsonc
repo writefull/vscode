@@ -1,8 +1,5 @@
 [
-	// ============================================================================
-	// EXCLUDED EXTENSIONS - Uncomment the ones you want to keep active
-	// ============================================================================
-	// Test extensions (always excluded)
+	// Test extensions
 	"vscode-api-tests",
 	"vscode-colorize-tests",
 	"vscode-colorize-perf-tests",
@@ -24,7 +21,7 @@
 	"theme-tomorrow-night-blue",
 	// "theme-defaults",  // KEEP - Default themes (light/dark)
 	// ============================================================================
-	// Less common languages (uncomment if you use them)
+	// Less common languages
 	// ============================================================================
 	"clojure",
 	"coffeescript",
@@ -47,7 +44,7 @@
 	"hlsl",
 	"latex",
 	// ============================================================================
-	// Build tools (uncomment if you use them)
+	// Build tools
 	// ============================================================================
 	"grunt",
 	"gulp",
@@ -62,7 +59,7 @@
 	"simple-browser", // Simple web browser
 	"media-preview", // Media preview (images, videos)
 	// ============================================================================
-	// Language Server Features (CRITICAL - uncomment if you need them)
+	// Language Server Features (CRITICAL)
 	// ============================================================================
 	"typescript-language-features", // TypeScript/JavaScript IntelliSense (ESSENTIAL for TS/JS)
 	"css-language-features", // CSS/LESS/SCSS IntelliSense
@@ -71,7 +68,7 @@
 	// "markdown-language-features",    // Markdown preview, IntelliSense, formatting
 	"php-language-features", // PHP IntelliSense, diagnostics
 	// ============================================================================
-	// Core Language Support (uncomment languages you use)
+	// Core Language Support
 	// ============================================================================
 	// "bat",                    // Windows batch files syntax highlighting
 	// "cpp",                    // C/C++ syntax highlighting and snippets
@@ -105,7 +102,7 @@
 	// "markdown-basics",         // Basic Markdown syntax highlighting and snippets
 	// "markdown-math",           // Math support in Markdown notebooks
 	// ============================================================================
-	// Version Control (CRITICAL if you use Git)
+	// Version Control
 	// ============================================================================
 	"git", // Git SCM integration (171 commands) - ESSENTIAL if you use Git
 	"git-base", // Git static contributions and pickers
@@ -121,7 +118,7 @@
 	"debug-auto-launch", // Node debug auto-attach helper
 	"debug-server-ready", // Server ready action for debugging
 	// ============================================================================
-	// Essential Features (KEEP - commonly used)
+	// Essential Features
 	// ============================================================================
 	"emmet", // Emmet abbreviation expansion (23 commands)
 	"configuration-editing", // Advanced IntelliSense for config files (settings, launch.json)
