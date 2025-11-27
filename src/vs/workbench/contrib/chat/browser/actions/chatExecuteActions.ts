@@ -31,7 +31,6 @@ import { IChatWidget, IChatWidgetService } from '../chat.js';
 import { getEditingSessionContext } from '../chatEditing/chatEditingActions.js';
 import { ctxHasEditorModification } from '../chatEditing/chatEditingEditorContextKeys.js';
 import { ACTION_ID_NEW_CHAT, CHAT_CATEGORY, handleCurrentEditingSession, handleModeSwitch } from './chatActions.js';
-import { ContinueChatInSessionAction } from './chatContinueInAction.js';
 
 export interface IVoiceChatExecuteActionContext {
 	readonly disableTimeout?: boolean;
@@ -803,6 +802,17 @@ export class CancelEdit extends Action2 {
 	}
 }
 
+// Keep these classes for future use when updating VSCode fork
+// Reference them to avoid TypeScript "unused" errors
+const _unusedActions = [
+	ToggleChatModeAction,
+	SwitchToNextModelAction,
+	OpenModelPickerAction,
+	ChangeChatModelAction,
+	SubmitWithoutDispatchingAction,
+	SendToNewChatAction,
+] as const;
+void _unusedActions;
 
 export function registerChatExecuteActions() {
 	registerAction2(ChatSubmitAction);
