@@ -133,6 +133,7 @@ import { ConfigureToolSets, UserToolSetsContributions } from './tools/toolSetsCo
 import { ChatViewsWelcomeHandler } from './viewsWelcome/chatViewsWelcomeHandler.js';
 import { ChatWidgetService } from './chatWidgetService.js';
 import { AgentSessionsService, IAgentSessionsService } from './agentSessions/agentSessionsService.js';
+import './overleaf/overleafAgent.contribution.js';
 
 const toolReferenceNameEnumValues: string[] = [];
 const toolReferenceNameEnumDescriptions: string[] = [];
