@@ -5,6 +5,7 @@
 
 import gulp from 'gulp';
 import * as path from 'path';
+import * as fs from 'fs';
 import es from 'event-stream';
 import * as util from './lib/util.ts';
 import { getVersion } from './lib/getVersion.ts';
@@ -22,6 +23,7 @@ import * as extensions from './lib/extensions.ts';
 import VinylFile from 'vinyl';
 import jsonEditor from 'gulp-json-editor';
 import buildfile from './buildfile.ts';
+import * as jsoncParser from 'jsonc-parser';
 
 const REPO_ROOT = path.dirname(import.meta.dirname);
 const BUILD_ROOT = path.dirname(REPO_ROOT);
@@ -90,8 +92,13 @@ const vscodeWebEntryPoints = [
  * @param product The parsed product.json file contents
  */
 export const createVSCodeWebFileContentMapper = (extensionsRoot: string, product: typeof import('../product.json')) => {
-	return (path: string): ((content: string) => string) | undefined => {
-		if (path.endsWith('vs/platform/product/common/product.js')) {
+	// Read excluded extensions from JSONC (single source of truth) once
+	const excludedExtensionsPath = path.join(REPO_ROOT, 'build', 'lib', 'excludedExtensions.jsonc');
+	const excludedExtensionsContent = fs.readFileSync(excludedExtensionsPath, 'utf8');
+	const excludedExtensions: string[] = jsoncParser.parse(excludedExtensionsContent, [], { allowTrailingComma: true });
+
+	return (filePath: string): ((content: string) => string) | undefined => {
+		if (filePath.endsWith('vs/platform/product/common/product.js')) {
 			return content => {
 				const productConfiguration = JSON.stringify({
 					...product,
@@ -101,9 +108,9 @@ export const createVSCodeWebFileContentMapper = (extensionsRoot: string, product
 				});
 				return content.replace('/*BUILD->INSERT_PRODUCT_CONFIGURATION*/', () => productConfiguration.substr(1, productConfiguration.length - 2) /* without { and }*/);
 			};
-		} else if (path.endsWith('vs/workbench/services/extensionManagement/browser/builtinExtensionsScannerService.js')) {
+		} else if (filePath.endsWith('vs/workbench/services/extensionManagement/browser/builtinExtensionsScannerService.js')) {
 			return content => {
-				const builtinExtensions = JSON.stringify(extensions.scanBuiltinExtensions(extensionsRoot));
+				const builtinExtensions = JSON.stringify(extensions.scanBuiltinExtensions(extensionsRoot, excludedExtensions));
 				return content.replace('/*BUILD->INSERT_BUILTIN_EXTENSIONS*/', () => builtinExtensions.substr(1, builtinExtensions.length - 2) /* without [ and ]*/);
 			};
 		}

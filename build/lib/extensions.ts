@@ -30,6 +30,11 @@ import vzip from 'gulp-vinyl-zip';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 
+// Read excluded extensions from JSONC (single source of truth)
+// JSONC supports comments, so we can comment out extensions we want to keep
+const excludedExtensionsContent = fs.readFileSync(path.join(import.meta.dirname, 'excludedExtensions.jsonc'), 'utf8');
+const excludedExtensions: string[] = jsoncParser.parse(excludedExtensionsContent, [], { allowTrailingComma: true }) as string[];
+
 const root = path.dirname(path.dirname(import.meta.dirname));
 const commit = getVersion(root);
 const sourceMappingURLBase = `https://main.vscode-cdn.net/sourcemaps/${commit}`;
@@ -316,15 +321,6 @@ export function fromGithub({ name, version, repo, sha256, metadata }: IExtension
  */
 const nativeExtensions = [
 	'microsoft-authentication',
-];
-
-const excludedExtensions = [
-	'vscode-api-tests',
-	'vscode-colorize-tests',
-	'vscode-colorize-perf-tests',
-	'vscode-test-resolver',
-	'ms-vscode.node-debug',
-	'ms-vscode.node-debug2',
 ];
 
 const marketplaceWebExtensionsExclude = new Set([
