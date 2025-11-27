@@ -39,6 +39,26 @@ const root = path.dirname(path.dirname(import.meta.dirname));
 const commit = getVersion(root);
 const sourceMappingURLBase = `https://main.vscode-cdn.net/sourcemaps/${commit}`;
 
+/**
+ * Get list of excluded extensions
+ * @returns Array of excluded extension names
+ */
+export function getExcludedExtensions(): string[] {
+	return excludedExtensions;
+}
+
+/**
+ * Get list of active (non-excluded) extension directories
+ * @returns Array of extension directory names (e.g., ['git', 'css-language-features'])
+ */
+export function getActiveExtensions(): string[] {
+	const extensionsPath = path.join(root, 'extensions');
+	const allExtensions = glob.sync('*/package.json', { cwd: extensionsPath })
+		.map(p => path.dirname(p))
+		.filter(name => !excludedExtensions.includes(name));
+	return allExtensions.sort();
+}
+
 function minifyExtensionResources(input: Stream): Stream {
 	const jsonFilter = filter(['**/*.json', '**/*.code-snippets'], { restore: true });
 	return input
