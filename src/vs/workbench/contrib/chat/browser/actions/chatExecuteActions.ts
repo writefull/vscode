@@ -806,18 +806,18 @@ export class CancelEdit extends Action2 {
 
 export function registerChatExecuteActions() {
 	registerAction2(ChatSubmitAction);
-	registerAction2(ChatDelegateToEditSessionAction);
+	// registerAction2(ChatDelegateToEditSessionAction);
 	registerAction2(ChatEditingSessionSubmitAction);
-	registerAction2(SubmitWithoutDispatchingAction);
+	// registerAction2(SubmitWithoutDispatchingAction);
 	registerAction2(CancelAction);
-	registerAction2(SendToNewChatAction);
-	registerAction2(ChatSubmitWithCodebaseAction);
-	registerAction2(ContinueChatInSessionAction);
-	registerAction2(ToggleChatModeAction);
-	registerAction2(SwitchToNextModelAction);
-	registerAction2(OpenModelPickerAction);
-	registerAction2(OpenModePickerAction);
+	// registerAction2(SendToNewChatAction);
+	// registerAction2(ChatSubmitWithCodebaseAction);
+	// registerAction2(ContinueChatInSessionAction);
+	// registerAction2(ToggleChatModeAction);
+	// registerAction2(SwitchToNextModelAction);
+	// registerAction2(OpenModelPickerAction);
+	// registerAction2(OpenModePickerAction);
 	registerAction2(ChatSessionPrimaryPickerAction);
-	registerAction2(ChangeChatModelAction);
+	// registerAction2(ChangeChatModelAction);
 	registerAction2(CancelEdit);
 }
