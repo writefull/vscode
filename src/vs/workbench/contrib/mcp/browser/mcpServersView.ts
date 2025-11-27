@@ -38,7 +38,8 @@ import { Registry } from '../../../../platform/registry/common/platform.js';
 import { IWorkbenchContribution } from '../../../common/contributions.js';
 import { SyncDescriptor } from '../../../../platform/instantiation/common/descriptors.js';
 import { DefaultViewsContext, SearchMcpServersContext } from '../../extensions/common/extensions.js';
-import { VIEW_CONTAINER } from '../../extensions/browser/extensions.contribution.js';
+// FORK: VIEW_CONTAINER is commented out - Extensions view container is hidden
+// import { VIEW_CONTAINER } from '../../extensions/browser/extensions.contribution.js';
 import { ChatContextKeys } from '../../chat/common/chatContextKeys.js';
 import { Button } from '../../../../base/browser/ui/button/button.js';
 import { defaultButtonStyles } from '../../../../platform/theme/browser/defaultStyles.js';
@@ -524,6 +525,9 @@ export class McpServersViewsContribution extends Disposable implements IWorkbenc
 	constructor() {
 		super();
 
+		// FORK: MCP Servers views registration is commented out because VIEW_CONTAINER (Extensions) is hidden
+		// These views depend on the Extensions view container which is no longer available
+		/*
 		Registry.as<IViewsRegistry>(ViewExtensions.ViewsRegistry).registerViews([
 			{
 				id: InstalledMcpServersViewId,
@@ -565,5 +569,6 @@ export class McpServersViewsContribution extends Disposable implements IWorkbenc
 				when: ContextKeyExpr.and(SearchMcpServersContext, ChatContextKeys.Setup.hidden.negate(), McpServersGalleryStatusContext.isEqualTo(McpGalleryManifestStatus.Available), ContextKeyDefinedExpr.create(`config.${mcpGalleryServiceUrlConfig}`).negate(), ProductQualityContext.isEqualTo('stable'), ContextKeyDefinedExpr.create(`config.${mcpGalleryServiceEnablementConfig}`).negate()),
 			}
 		], VIEW_CONTAINER);
+		*/
 	}
 }

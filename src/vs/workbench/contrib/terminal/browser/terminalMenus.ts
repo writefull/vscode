@@ -37,7 +37,11 @@ export const enum TerminalMenuBarGroup {
 	Configure = '7_configure'
 }
 
+// FORK: Terminal menus are completely disabled
 export function setupTerminalMenus(): void {
+	// Terminal menus are disabled - function body is commented out
+	return;
+	/*
 	MenuRegistry.appendMenuItems(
 		[
 			{
@@ -778,6 +782,7 @@ export function setupTerminalMenus(): void {
 			isHiddenByDefault: true
 		});
 	}
+	*/
 }
 
 export function getTerminalActionBarArgs(location: ITerminalLocationOptions, profiles: ITerminalProfile[], defaultProfileName: string, contributedProfiles: readonly IExtensionTerminalProfile[], terminalService: ITerminalService, dropdownMenu: IMenu, disposableStore: DisposableStore): {

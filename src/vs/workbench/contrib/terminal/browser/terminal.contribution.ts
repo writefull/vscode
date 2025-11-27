@@ -102,7 +102,9 @@ Registry.as<IDragAndDropContributionRegistry>(DragAndDropExtensions.DragAndDropC
 	}
 });
 
+// FORK: Terminal is completely disabled - users cannot open terminal in any way
 // Register views
+/*
 const VIEW_CONTAINER = Registry.as<IViewContainersRegistry>(ViewContainerExtensions.ViewContainersRegistry).registerViewContainer({
 	id: TERMINAL_VIEW_ID,
 	title: nls.localize2('terminal', "Terminal"),
@@ -129,11 +131,11 @@ Registry.as<IViewsRegistry>(ViewContainerExtensions.ViewsRegistry).registerViews
 		order: 3
 	}
 }], VIEW_CONTAINER);
+*/
 
-registerTerminalActions();
-
-setupTerminalCommands();
-
-setupTerminalMenus();
+// FORK: Terminal actions, commands, and menus are disabled
+// registerTerminalActions();
+// setupTerminalCommands();
+// setupTerminalMenus();
 
 registerColors();

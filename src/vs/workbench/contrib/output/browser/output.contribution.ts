@@ -63,7 +63,9 @@ ModesRegistry.registerLanguage({
 	mimetypes: [LOG_MIME]
 });
 
+// FORK: Output panel is completely disabled - users cannot open output in any way
 // register output container
+/*
 const outputViewIcon = registerIcon('output-view-icon', Codicon.output, nls.localize('outputViewIcon', 'View icon of the output view.'));
 const VIEW_CONTAINER: ViewContainer = Registry.as<IViewContainersRegistry>(ViewContainerExtensions.ViewContainersRegistry).registerViewContainer({
 	id: OUTPUT_VIEW_ID,
@@ -94,6 +96,7 @@ Registry.as<IViewsRegistry>(ViewContainerExtensions.ViewsRegistry).registerViews
 		order: 1,
 	}
 }], VIEW_CONTAINER);
+*/
 
 class OutputContribution extends Disposable implements IWorkbenchContribution {
 	constructor(

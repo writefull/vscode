@@ -65,6 +65,9 @@ registerEditorContribution(QuickDiffEditorController.ID,
 
 const sourceControlViewIcon = registerIcon('source-control-view-icon', Codicon.sourceControl, localize('sourceControlViewIcon', 'View icon of the Source Control view.'));
 
+// FORK: Commented out to hide Source Control from sidebar
+// Only Explorer and Search are shown in the left menu
+/*
 const viewContainer = Registry.as<IViewContainersRegistry>(ViewContainerExtensions.ViewContainersRegistry).registerViewContainer({
 	id: VIEWLET_ID,
 	title: localize2('source control', 'Source Control'),
@@ -75,7 +78,10 @@ const viewContainer = Registry.as<IViewContainersRegistry>(ViewContainerExtensio
 	order: 2,
 	hideIfEmpty: true,
 }, ViewContainerLocation.Sidebar, { doNotRegisterOpenCommand: true });
+*/
 
+// FORK: Commented out views registration since viewContainer is commented out
+/*
 const viewsRegistry = Registry.as<IViewsRegistry>(ViewContainerExtensions.ViewsRegistry);
 const containerTitle = localize('source control view', "Source Control");
 
@@ -155,6 +161,7 @@ viewsRegistry.registerViews([{
 	),
 	containerIcon: sourceControlViewIcon
 }], viewContainer);
+*/
 
 Registry.as<IWorkbenchContributionsRegistry>(WorkbenchExtensions.Workbench)
 	.registerWorkbenchContribution(SCMActiveRepositoryController, LifecyclePhase.Restored);

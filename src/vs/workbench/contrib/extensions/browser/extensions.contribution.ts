@@ -111,6 +111,9 @@ Registry.as<IEditorPaneRegistry>(EditorExtensions.EditorPane).registerEditorPane
 		new SyncDescriptor(ExtensionsInput)
 	]);
 
+// FORK: Commented out to hide Extensions from sidebar
+// Only Explorer and Search are shown in the left menu
+/*
 export const VIEW_CONTAINER = Registry.as<IViewContainersRegistry>(ViewContainerExtensions.ViewContainersRegistry).registerViewContainer(
 	{
 		id: VIEWLET_ID,
@@ -127,6 +130,7 @@ export const VIEW_CONTAINER = Registry.as<IViewContainersRegistry>(ViewContainer
 		rejectAddedViews: true,
 		alwaysUseContainerInfo: true,
 	}, ViewContainerLocation.Sidebar);
+*/
 
 Registry.as<IConfigurationRegistry>(ConfigurationExtensions.Configuration)
 	.registerConfiguration({

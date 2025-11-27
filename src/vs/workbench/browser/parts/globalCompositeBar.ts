@@ -102,9 +102,10 @@ export class GlobalCompositeBar extends Disposable {
 			preventLoopNavigation: true
 		}));
 
-		if (this.accountsVisibilityPreference) {
-			this.globalActivityActionBar.push(this.accountAction, { index: GlobalCompositeBar.ACCOUNTS_ACTION_INDEX });
-		}
+		// FORK: Accounts is always hidden - only Explorer and Search are shown in the left menu
+		// if (this.accountsVisibilityPreference) {
+		// 	this.globalActivityActionBar.push(this.accountAction, { index: GlobalCompositeBar.ACCOUNTS_ACTION_INDEX });
+		// }
 
 		this.globalActivityActionBar.push(this.globalActivityAction);
 
@@ -132,10 +133,16 @@ export class GlobalCompositeBar extends Disposable {
 	}
 
 	getContextMenuActions(): IAction[] {
-		return [toAction({ id: 'toggleAccountsVisibility', label: localize('accounts', "Accounts"), checked: this.accountsVisibilityPreference, run: () => this.accountsVisibilityPreference = !this.accountsVisibilityPreference })];
+		// FORK: Accounts toggle is removed from context menu - Accounts is always hidden
+		return [];
+		// return [toAction({ id: 'toggleAccountsVisibility', label: localize('accounts', "Accounts"), checked: this.accountsVisibilityPreference, run: () => this.accountsVisibilityPreference = !this.accountsVisibilityPreference })];
 	}
 
+	// FORK: Accounts toggle is disabled - Accounts is always hidden
 	private toggleAccountsActivity() {
+		// Accounts is always hidden, so this method does nothing
+		return;
+		/*
 		if (this.globalActivityActionBar.length() === 2 && this.accountsVisibilityPreference) {
 			return;
 		}
@@ -144,14 +151,18 @@ export class GlobalCompositeBar extends Disposable {
 		} else {
 			this.globalActivityActionBar.push(this.accountAction, { index: GlobalCompositeBar.ACCOUNTS_ACTION_INDEX });
 		}
+		*/
 	}
 
 	private get accountsVisibilityPreference(): boolean {
-		return isAccountsActionVisible(this.storageService);
+		// FORK: Accounts is always hidden
+		return false;
+		// return isAccountsActionVisible(this.storageService);
 	}
 
 	private set accountsVisibilityPreference(value: boolean) {
-		setAccountsActionVisible(this.storageService, value);
+		// FORK: Accounts visibility cannot be changed - it's always hidden
+		// setAccountsActionVisible(this.storageService, value);
 	}
 }
 
