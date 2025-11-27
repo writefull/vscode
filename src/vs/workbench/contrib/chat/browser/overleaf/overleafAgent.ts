@@ -53,7 +53,8 @@ import { buildMessages } from './utils/messageBuilder.js';
 export class OverleafAgent extends Disposable implements IChatAgentImplementation {
 	private static readonly AGENT_ID = 'overleaf.chat';
 	private static readonly AGENT_NAME = 'chat';
-	private static readonly DEFAULT_BACKEND_URL = 'https://localhost:3000/v1/chat/completions'; // TODO: Make this configurable
+	private static readonly DEFAULT_BACKEND_URL = 'http://localhost:4004/v1/chat/completions'; // TODO: Make this configurable
+	private static readonly DEFAULT_API_KEY = '1234567890'; // TODO: Make this configurable
 
 	// Store file selections/ranges per request to pass to tools
 	private fileSelections: Map<string, Map<string, IRange>> = new Map(); // requestId -> (fileUri -> range)
@@ -260,6 +261,7 @@ export class OverleafAgent extends Disposable implements IChatAgentImplementatio
 					data: JSON.stringify(requestBody),
 					headers: {
 						'Content-Type': 'application/json',
+						'x-api-key': OverleafAgent.DEFAULT_API_KEY,
 					},
 					timeout: 120000, // 2 minutes timeout
 				},
