@@ -893,6 +893,7 @@ export class ShowInstalledMcpServersCommand extends Action2 {
 
 	async run(accessor: ServicesAccessor) {
 		const viewsService = accessor.get(IViewsService);
+		// @ts-expect-error - FORK: Unused variable kept for future merge compatibility
 		const view = await viewsService.openView(InstalledMcpServersViewId, true);
 		// FORK: Extensions view container is hidden, so we can't open it
 		// if (!view) {

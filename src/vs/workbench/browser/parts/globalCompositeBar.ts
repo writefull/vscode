@@ -47,12 +47,14 @@ import { ICommandService } from '../../../platform/commands/common/commands.js';
 
 export class GlobalCompositeBar extends Disposable {
 
+	// @ts-expect-error - FORK: Unused variable kept for future merge compatibility
 	private static readonly ACCOUNTS_ACTION_INDEX = 0;
 	static readonly ACCOUNTS_ICON = registerIcon('accounts-view-bar-icon', Codicon.account, localize('accountsViewBarIcon', "Accounts icon in the view bar."));
 
 	readonly element: HTMLElement;
 
 	private readonly globalActivityAction = this._register(new Action(GLOBAL_ACTIVITY_ID));
+	// @ts-expect-error - FORK: Unused variable kept for future merge compatibility
 	private readonly accountAction = this._register(new Action(ACCOUNTS_ACTIVITY_ID));
 	private readonly globalActivityActionBar: ActionBar;
 
@@ -154,6 +156,7 @@ export class GlobalCompositeBar extends Disposable {
 		*/
 	}
 
+	// @ts-expect-error - FORK: Unused getter kept for future merge compatibility
 	private get accountsVisibilityPreference(): boolean {
 		// FORK: Accounts is always hidden
 		return false;
