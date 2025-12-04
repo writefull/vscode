@@ -1,0 +1,19 @@
+{
+	"displayName": "LaTeX Language Features",
+	"description": "Provides LaTeX compilation, preview, and language features",
+	"latex.build.title": "Build LaTeX",
+	"latex.preview.title": "Preview LaTeX",
+	"latex.clean.title": "Clean LaTeX",
+	"latex.sync.title": "SyncTeX: Sync from source",
+	"latex.compilation.mode.auto": "Try WASM first, fallback to server",
+	"latex.compilation.mode.wasm": "Use WebAssembly compiler only",
+	"latex.compilation.mode.server": "Use server-side compiler only",
+	"latex.compilation.mode.description": "LaTeX compilation mode",
+	"latex.compilation.recipe.description": "LaTeX compilation recipe",
+	"latex.compilation.cleanSubFiles.description": "Clean sub-files when cleaning",
+	"latex.compilation.autoBuild.description": "Automatically build LaTeX documents",
+	"latex.preview.viewer.description": "LaTeX preview viewer type",
+	"latex.preview.sync.description": "Enable SyncTeX synchronization",
+	"configuration.compilation": "LaTeX Compilation"
+}
+

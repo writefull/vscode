@@ -1,0 +1,178 @@
+{
+  "name": "latex-language-features",
+  "description": "%description%",
+  "displayName": "%displayName%",
+  "version": "1.0.0",
+  "author": "vscode",
+  "publisher": "vscode",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.30.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:latex",
+    "onLanguage:tex",
+    "onCommand:latex.build",
+    "onCommand:latex.preview",
+    "onCommand:latex.clean"
+  ],
+  "main": "./out/extension",
+  "browser": "./dist/browser/extension",
+  "scripts": {
+    "vscode:prepublish": "npx tsc -p .",
+    "compile": "npx tsc -p .",
+    "compile-web": "npx webpack-cli --config extension-browser.webpack.config --mode none",
+    "watch-web": "npx webpack-cli --config extension-browser.webpack.config --mode none --watch",
+    "watch": "npx tsc -p . --watch"
+  },
+  "contributes": {
+    "configuration": [
+      {
+        "type": "object",
+        "title": "%configuration.compilation%",
+        "order": 20,
+        "properties": {
+          "latex.compilation.mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "wasm",
+              "server"
+            ],
+            "enumDescriptions": [
+              "%latex.compilation.mode.auto%",
+              "%latex.compilation.mode.wasm%",
+              "%latex.compilation.mode.server%"
+            ],
+            "default": "auto",
+            "description": "%latex.compilation.mode.description%",
+            "scope": "window"
+          },
+          "latex.compilation.recipe": {
+            "type": "string",
+            "enum": [
+              "latexmk",
+              "pdflatex",
+              "xelatex",
+              "lualatex"
+            ],
+            "default": "latexmk",
+            "description": "%latex.compilation.recipe.description%",
+            "scope": "window"
+          },
+          "latex.compilation.cleanSubFiles": {
+            "type": "boolean",
+            "default": false,
+            "description": "%latex.compilation.cleanSubFiles.description%",
+            "scope": "window"
+          },
+          "latex.compilation.autoBuild": {
+            "type": "string",
+            "enum": [
+              "never",
+              "onSave",
+              "onFileChange"
+            ],
+            "default": "onSave",
+            "description": "%latex.compilation.autoBuild.description%",
+            "scope": "window"
+          },
+          "latex.preview.viewer": {
+            "type": "string",
+            "enum": [
+              "tab",
+              "external"
+            ],
+            "default": "tab",
+            "description": "%latex.preview.viewer.description%",
+            "scope": "window"
+          },
+          "latex.preview.sync": {
+            "type": "boolean",
+            "default": true,
+            "description": "%latex.preview.sync.description%",
+            "scope": "window"
+          }
+        }
+      }
+    ],
+    "commands": [
+      {
+        "command": "latex.build",
+        "title": "%latex.build.title%",
+        "category": "LaTeX"
+      },
+      {
+        "command": "latex.preview",
+        "title": "%latex.preview.title%",
+        "category": "LaTeX"
+      },
+      {
+        "command": "latex.clean",
+        "title": "%latex.clean.title%",
+        "category": "LaTeX"
+      },
+      {
+        "command": "latex.sync",
+        "title": "%latex.sync.title%",
+        "category": "LaTeX"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "latex.build",
+          "when": "editorLangId == latex || editorLangId == tex"
+        },
+        {
+          "command": "latex.preview",
+          "when": "editorLangId == latex || editorLangId == tex"
+        },
+        {
+          "command": "latex.clean",
+          "when": "editorLangId == latex || editorLangId == tex"
+        },
+        {
+          "command": "latex.sync",
+          "when": "editorLangId == latex || editorLangId == tex"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "latex.build",
+          "when": "editorLangId == latex || editorLangId == tex",
+          "group": "navigation"
+        },
+        {
+          "command": "latex.preview",
+          "when": "editorLangId == latex || editorLangId == tex",
+          "group": "navigation"
+        }
+      ]
+    },
+    "problemMatchers": [
+      {
+        "name": "latex",
+        "owner": "latex",
+        "fileLocation": [
+          "relative",
+          "${workspaceFolder}"
+        ],
+        "pattern": {
+          "regexp": "^(.+):(\\d+):\\s*(.+)$",
+          "file": 1,
+          "line": 2,
+          "message": 3
+        }
+      }
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/vscode.git"
+  }
+}
+
