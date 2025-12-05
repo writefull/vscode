@@ -8,18 +8,21 @@ import { OutputChannelLogger } from './utils/logger';
 import { WasmLatexCompiler } from './compilers/wasmCompiler';
 import { ServerLatexCompiler } from './compilers/serverCompiler';
 import { PreviewManager } from './preview/previewManager';
+import { LaTeXDiagnosticsProvider } from './diagnostics/diagnosticsProvider';
 
 export interface CompilationResult {
 	success: boolean;
 	error?: string;
 	pdfPath?: string;
 	logPath?: string;
+	logContent?: string; // Add log content for diagnostics
 }
 
 export class LatexService implements vscode.Disposable {
 	private wasmCompiler: WasmLatexCompiler;
 	private serverCompiler: ServerLatexCompiler;
 	private previewManager: PreviewManager | undefined;
+	private diagnosticsProvider: LaTeXDiagnosticsProvider | undefined;
 	private disposables: vscode.Disposable[] = [];
 	constructor(
 		private readonly logger: OutputChannelLogger,
@@ -27,6 +30,10 @@ export class LatexService implements vscode.Disposable {
 	) {
 		this.wasmCompiler = new WasmLatexCompiler(logger, context);
 		this.serverCompiler = new ServerLatexCompiler(logger);
+		if (context) {
+			this.diagnosticsProvider = new LaTeXDiagnosticsProvider(logger, context);
+			this.disposables.push(this.diagnosticsProvider);
+		}
 	}
 
 	setContext(context: vscode.ExtensionContext): void {
@@ -39,6 +46,10 @@ export class LatexService implements vscode.Disposable {
 		this.previewManager = previewManager;
 	}
 
+	setDiagnosticsProvider(diagnosticsProvider: LaTeXDiagnosticsProvider): void {
+		this.diagnosticsProvider = diagnosticsProvider;
+	}
+
 	async build(uri: vscode.Uri): Promise<CompilationResult> {
 		const config = vscode.workspace.getConfiguration('latex');
 		const mode = config.get<string>('compilation.mode', 'auto');
@@ -48,48 +59,91 @@ export class LatexService implements vscode.Disposable {
 		this.logger.info(`Compilation mode: ${mode}`);
 
 		// Determine compilation strategy
+		let result: CompilationResult;
 		if (mode === 'wasm') {
-			return this.buildWithWasm(uri, recipe);
+			result = await this.buildWithWasm(uri, recipe);
 		} else if (mode === 'server') {
-			return this.buildWithServer(uri, recipe);
+			result = await this.buildWithServer(uri, recipe);
 		} else {
 			// Auto mode: try WASM first, fallback to server
 			this.logger.info('Attempting WASM compilation...');
 			const wasmResult = await this.buildWithWasm(uri, recipe);
 			if (wasmResult.success) {
-				return wasmResult;
-			}
-			this.logger.warn(`WASM compilation failed: ${wasmResult.error || 'Unknown error'}`);
-			this.logger.info('Falling back to server-side compilation...');
-			const serverResult = await this.buildWithServer(uri, recipe);
+				result = wasmResult;
+			} else {
+				this.logger.warn(`WASM compilation failed: ${wasmResult.error || 'Unknown error'}`);
+				this.logger.info('Falling back to server-side compilation...');
+				const serverResult = await this.buildWithServer(uri, recipe);
 
-			// Provide helpful error message if both fail
-			if (!serverResult.success) {
-				const isWeb = vscode.env.uiKind === vscode.UIKind.Web;
-				if (isWeb) {
-					// In web context, provide a clear error message
-					const combinedError = `Both WASM and server compilation failed.\n` +
-						`WASM error: ${wasmResult.error || 'Unknown error'}\n` +
-						`Server error: ${serverResult.error || 'Unknown error'}\n\n` +
-						`In web context, only WASM compilation is supported. ` +
-						`Please check:\n` +
-						`1. SwiftLaTeX files are in vendors/swiftlatex/ directory\n` +
-						`2. Extension context is available (webview support)\n` +
-						`3. Check "LaTeX" output channel for detailed error messages`;
+				// Provide helpful error message if both fail
+				if (!serverResult.success) {
+					const isWeb = vscode.env.uiKind === vscode.UIKind.Web;
+					if (isWeb) {
+						// In web context, provide a clear error message
+						const combinedError = `Both WASM and server compilation failed.\n` +
+							`WASM error: ${wasmResult.error || 'Unknown error'}\n` +
+							`Server error: ${serverResult.error || 'Unknown error'}\n\n` +
+							`In web context, only WASM compilation is supported. ` +
+							`Please check:\n` +
+							`1. SwiftLaTeX files are in vendors/swiftlatex/ directory\n` +
+							`2. Extension context is available (webview support)\n` +
+							`3. Check "LaTeX" output channel for detailed error messages`;
 
-					this.logger.error(combinedError);
+						this.logger.error(combinedError);
 
-					return {
-						success: false,
-						error: `LaTeX compilation failed in web context. WASM compiler error: ${wasmResult.error || 'Unknown'}. ` +
-							`Please check the "LaTeX" output channel for details. ` +
-							`Ensure SwiftLaTeX files are downloaded (see SETUP_SWIFTLATEX.md).`
-					};
+						result = {
+							success: false,
+							error: `LaTeX compilation failed in web context. WASM compiler error: ${wasmResult.error || 'Unknown'}. ` +
+								`Please check the "LaTeX" output channel for details. ` +
+								`Ensure SwiftLaTeX files are downloaded (see SETUP_SWIFTLATEX.md).`
+						};
+					} else {
+						result = serverResult;
+					}
+				} else {
+					result = serverResult;
 				}
 			}
-
-			return serverResult;
 		}
+
+		// Update diagnostics from compilation log if available
+		// Read log file directly (like latex-workshop does)
+		if (this.diagnosticsProvider && result.logContent) {
+			try {
+				const document = await vscode.workspace.openTextDocument(uri);
+				this.diagnosticsProvider.updateFromLog(document, result.logContent);
+			} catch (error) {
+				const message = error instanceof Error ? error.message : String(error);
+				this.logger.warn(`Failed to update diagnostics from log: ${message}`);
+			}
+		} else if (this.diagnosticsProvider && mode !== 'wasm') {
+			// Try to read log file directly for server compilation
+			try {
+				const workspaceFolder = vscode.workspace.getWorkspaceFolder(uri);
+				if (workspaceFolder) {
+					const uriPath = uri.path;
+					const lastSlash = uriPath.lastIndexOf('/');
+					const fileName = lastSlash >= 0 ? uriPath.substring(lastSlash + 1) : uriPath;
+					const lastDot = fileName.lastIndexOf('.');
+					const baseName = lastDot >= 0 ? fileName.substring(0, lastDot) : fileName;
+					const logUri = vscode.Uri.joinPath(workspaceFolder.uri, baseName + '.log');
+
+					try {
+						const logBytes = await vscode.workspace.fs.readFile(logUri);
+						const logContent = new TextDecoder('utf-8').decode(logBytes);
+						const document = await vscode.workspace.openTextDocument(uri);
+						this.diagnosticsProvider.updateFromLog(document, logContent);
+					} catch {
+						// Log file might not exist, which is okay
+					}
+				}
+			} catch (error) {
+				const message = error instanceof Error ? error.message : String(error);
+				this.logger.warn(`Failed to read log file for diagnostics: ${message}`);
+			}
+		}
+
+		return result;
 	}
 
 	private async buildWithWasm(uri: vscode.Uri, recipe: string): Promise<CompilationResult> {
@@ -208,6 +262,7 @@ export class LatexService implements vscode.Disposable {
 		this.wasmCompiler.dispose();
 		this.serverCompiler.dispose();
 		this.previewManager?.dispose();
+		this.diagnosticsProvider?.dispose();
 	}
 }
 

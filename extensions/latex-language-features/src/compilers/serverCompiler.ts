@@ -135,17 +135,40 @@ export class ServerLatexCompiler {
 			const baseName = lastDot >= 0 ? fileName.substring(0, lastDot) : fileName;
 
 			const pdfUri = vscode.Uri.joinPath(workspaceFolder.uri, baseName + '.pdf');
+			const logUri = vscode.Uri.joinPath(workspaceFolder.uri, baseName + '.log');
 
 			try {
 				await vscode.workspace.fs.stat(pdfUri);
+
+				// Try to read log file if available
+				let logContent: string | undefined;
+				try {
+					const logBytes = await vscode.workspace.fs.readFile(logUri);
+					logContent = new TextDecoder('utf-8').decode(logBytes);
+				} catch {
+					// Log file might not exist, which is okay
+					// Skip silently
+				}
+
 				return {
 					success: true,
-					pdfPath: pdfUri.fsPath || pdfUri.toString()
+					pdfPath: pdfUri.fsPath || pdfUri.toString(),
+					logContent
 				};
 			} catch {
+				// Try to read log even if PDF doesn't exist (for error diagnostics)
+				let logContent: string | undefined;
+				try {
+					const logBytes = await vscode.workspace.fs.readFile(logUri);
+					logContent = new TextDecoder('utf-8').decode(logBytes);
+				} catch {
+					// Log file might not exist
+				}
+
 				return {
 					success: false,
-					error: 'PDF not generated'
+					error: 'PDF not generated',
+					logContent
 				};
 			}
 		} catch (error) {

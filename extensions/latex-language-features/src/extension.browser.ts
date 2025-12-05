@@ -31,6 +31,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 	latexService.setPreviewManager(previewManager);
 	context.subscriptions.push(latexService, previewManager);
 
+	// Diagnostics provider is initialized inside LatexService
+
 	// Initialize command manager
 	commandManager = new CommandManager();
 	context.subscriptions.push(commandManager);
