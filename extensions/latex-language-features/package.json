@@ -95,6 +95,76 @@
             "default": true,
             "description": "%latex.preview.sync.description%",
             "scope": "window"
+          },
+          "latex.outline.sections": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "part",
+              "chapter",
+              "section",
+              "subsection",
+              "subsubsection",
+              "paragraph",
+              "subparagraph"
+            ],
+            "description": "%latex.outline.sections.description%",
+            "scope": "window"
+          },
+          "latex.outline.commands": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              "label"
+            ],
+            "description": "%latex.outline.commands.description%",
+            "scope": "window"
+          },
+          "latex.outline.floats.enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "%latex.outline.floats.enabled.description%",
+            "scope": "window"
+          },
+          "latex.outline.floats.caption.enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "%latex.outline.floats.caption.enabled.description%",
+            "scope": "window"
+          },
+          "latex.outline.floats.number.enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "%latex.outline.floats.number.enabled.description%",
+            "scope": "window"
+          },
+          "latex.outline.numbers.enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "%latex.outline.numbers.enabled.description%",
+            "scope": "window"
+          },
+          "latex.texDirs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "description": "%latex.texDirs.description%",
+            "scope": "window"
+          },
+          "latex.watch.files.ignore": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "description": "%latex.watch.files.ignore.description%",
+            "scope": "window"
           }
         }
       }
@@ -173,6 +243,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/microsoft/vscode.git"
+  },
+  "dependencies": {
+    "@unified-latex/unified-latex-types": "^1.8.0",
+    "@unified-latex/unified-latex-util-arguments": "^1.8.1",
+    "@unified-latex/unified-latex-util-parse": "^1.8.1",
+    "@unified-latex/unified-latex-util-to-string": "^1.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1"
   }
 }
-

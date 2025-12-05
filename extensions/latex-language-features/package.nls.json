@@ -14,6 +14,14 @@
 	"latex.compilation.autoBuild.description": "Automatically build LaTeX documents",
 	"latex.preview.viewer.description": "LaTeX preview viewer type",
 	"latex.preview.sync.description": "Enable SyncTeX synchronization",
+	"latex.outline.sections.description": "Section names in LaTeX outline hierarchy. Use '|' to separate multiple tags at the same level, e.g., 'section|alternative'.",
+	"latex.outline.commands.description": "Command names to show in outline/structure views. Commands must be called in the form \\commandname{arg}.",
+	"latex.outline.floats.enabled.description": "Show floating objects (figures and tables) in outline/structure views",
+	"latex.outline.floats.caption.enabled.description": "Show captions for floating objects in outline",
+	"latex.outline.floats.number.enabled.description": "Show numbers for floating objects in outline",
+	"latex.outline.numbers.enabled.description": "Show section numbers in outline",
+	"latex.texDirs.description": "Additional directories to search for LaTeX files",
+	"latex.watch.files.ignore.description": "Files to ignore from watching mechanism",
 	"configuration.compilation": "LaTeX Compilation"
 }
 

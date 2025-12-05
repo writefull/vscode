@@ -12,6 +12,7 @@ import { CleanCommand } from './commands/cleanCommand';
 import { SyncCommand } from './commands/syncCommand';
 import { OutputChannelLogger } from './utils/logger';
 import { PreviewManager } from './preview/previewManager';
+import { LaTeXDocumentSymbolProvider } from './outline/documentSymbolProvider';
 
 let latexService: LatexService | undefined;
 let commandManager: CommandManager | undefined;
@@ -35,6 +36,18 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 	commandManager.register(new PreviewCommand(latexService, logger));
 	commandManager.register(new CleanCommand(latexService, logger));
 	commandManager.register(new SyncCommand(latexService, logger));
+
+	// Register document symbol provider for outline
+	const latexSelector: vscode.DocumentSelector = [
+		{ language: 'latex', scheme: 'file' },
+		{ language: 'latex', scheme: 'untitled' },
+		{ language: 'tex', scheme: 'file' },
+		{ language: 'tex', scheme: 'untitled' }
+	];
+	const documentSymbolProvider = new LaTeXDocumentSymbolProvider(logger);
+	context.subscriptions.push(
+		vscode.languages.registerDocumentSymbolProvider(latexSelector, documentSymbolProvider)
+	);
 
 	// Register file watchers for auto-build
 	const config = vscode.workspace.getConfiguration('latex');
