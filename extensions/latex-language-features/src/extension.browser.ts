@@ -13,6 +13,10 @@ import { SyncCommand } from './commands/syncCommand';
 import { OutputChannelLogger } from './utils/logger';
 import { PreviewManager } from './preview/previewManager';
 import { LaTeXDocumentSymbolProvider } from './outline/documentSymbolProvider';
+import { LaTeXCompletionProvider } from './completion/completionProvider';
+import { initializeMacroCompleter } from './completion/completer/macro';
+import { initializeEnvironmentCompleter } from './completion/completer/environment';
+import { initializePackageCompleter } from './completion/completer/package';
 
 let latexService: LatexService | undefined;
 let commandManager: CommandManager | undefined;
@@ -48,6 +52,79 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 	context.subscriptions.push(
 		vscode.languages.registerDocumentSymbolProvider(latexSelector, documentSymbolProvider)
 	);
+
+	// Initialize completion
+	// In browser, we need to wait for data to load before registering the provider
+	console.log('[Extension Browser] ===== STARTING COMPLETION INITIALIZATION =====');
+	console.log('[Extension Browser] Initializing completion with extensionUri:', context.extensionUri.toString());
+	console.log('[Extension Browser] Extension path:', context.extensionPath);
+
+	// Try to find latex-workshop data
+	// In web, we need to check if we can access the latex-workshop extension
+	const finalDataUri = context.extensionUri;
+	console.log('[Extension Browser] Using data URI:', finalDataUri.toString());
+	console.log('[Extension Browser] Data URI scheme:', finalDataUri.scheme);
+	console.log('[Extension Browser] Data URI path:', finalDataUri.path);
+
+	// Initialize completers and wait for them to complete before registering provider
+	console.log('[Extension Browser] Initializing completers...');
+	try {
+		await Promise.all([
+			initializeMacroCompleter(finalDataUri)
+				.then(() => {
+					console.log('[Extension Browser] ✓ Macro completer initialized successfully');
+				})
+				.catch(err => {
+					console.error('[Extension Browser] X Failed to initialize macro completer:', err);
+					if (err instanceof Error) {
+						console.error('[Extension Browser] Error stack:', err.stack);
+					}
+					logger.error(`Failed to initialize macro completer: ${err}`);
+				}),
+			initializeEnvironmentCompleter(finalDataUri)
+				.then(() => {
+					console.log('[Extension Browser] ✓ Environment completer initialized successfully');
+				})
+				.catch(err => {
+					console.error('[Extension Browser] X Failed to initialize environment completer:', err);
+					if (err instanceof Error) {
+						console.error('[Extension Browser] Error stack:', err.stack);
+					}
+					logger.error(`Failed to initialize environment completer: ${err}`);
+				}),
+			initializePackageCompleter(finalDataUri)
+				.then(() => {
+					console.log('[Extension Browser] ✓ Package completer initialized successfully');
+				})
+				.catch(err => {
+					console.error('[Extension Browser] X Failed to initialize package completer:', err);
+					if (err instanceof Error) {
+						console.error('[Extension Browser] Error stack:', err.stack);
+					}
+					logger.error(`Failed to initialize package completer: ${err}`);
+				})
+		]);
+		console.log('[Extension Browser] ===== ALL COMPLETERS INITIALIZED =====');
+	} catch (error) {
+		console.error('[Extension Browser] ===== ERROR DURING INITIALIZATION =====');
+		console.error('[Extension Browser] Error:', error);
+		if (error instanceof Error) {
+			console.error('[Extension Browser] Error stack:', error.stack);
+		}
+	}
+
+	// Register completion provider AFTER data is loaded
+	console.log('[Extension Browser] Registering completion provider');
+	const completionProvider = new LaTeXCompletionProvider();
+	context.subscriptions.push(
+		vscode.languages.registerCompletionItemProvider(
+			latexSelector,
+			completionProvider,
+			'\\',
+			'{'
+		)
+	);
+	console.log('[Extension Browser] Completion provider registered');
 
 	// Register file watchers for auto-build
 	const config = vscode.workspace.getConfiguration('latex');

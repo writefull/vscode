@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 // @ts-check
+import CopyPlugin from 'copy-webpack-plugin';
 import { browser as withBrowserDefaults, browserPlugins } from '../shared.webpack.config.mjs';
 
 export default withBrowserDefaults({
@@ -12,6 +13,16 @@ export default withBrowserDefaults({
 	},
 	plugins: [
 		...browserPlugins(import.meta.dirname), // add plugins, don't replace inherited
+		// Copy data files to dist/browser/data for web access
+		new CopyPlugin({
+			patterns: [
+				{
+					from: 'data',
+					to: 'data',
+					noErrorOnMissing: true
+				}
+			],
+		}),
 	],
 });
 
